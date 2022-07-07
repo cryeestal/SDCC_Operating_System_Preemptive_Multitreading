@@ -18,13 +18,13 @@
 void delay(unsigned char n){
 	EA = 0;
 	if(threadname == 0){
-		clocka += 2 + n/8 ;
+		clocka += 1/2 + n/8 ;
 	}else if(threadname == 1){
-		clockb += 2 + n/8 ;
+		clockb += 1/2 + n/8 ;
 	}else if(threadname == 2){
-		clockc += 2 + n/8 ;
+		clockc += 1/2 + n/8 ;
 	}else if(threadname == 3){
-		clockd += 2 + n/8 ;
+		clockd += 1/2 + n/8 ;
 	}
 	EA = 1;
 	ThreadYield();
