@@ -1,0 +1,751 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.0 #12072 (Mac OS X x86_64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module testparking
+                                      6 	.optsdcc -mmcs51 --model-small
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl __mcs51_genXRAMCLEAR
+                                     12 	.globl __mcs51_genXINIT
+                                     13 	.globl __mcs51_genRAMCLEAR
+                                     14 	.globl __sdcc_gsinit_startup
+                                     15 	.globl _timer0_ISR
+                                     16 	.globl _main
+                                     17 	.globl _Car
+                                     18 	.globl _ThreadExit
+                                     19 	.globl _ThreadCreate
+                                     20 	.globl _delay
+                                     21 	.globl _CY
+                                     22 	.globl _AC
+                                     23 	.globl _F0
+                                     24 	.globl _RS1
+                                     25 	.globl _RS0
+                                     26 	.globl _OV
+                                     27 	.globl _F1
+                                     28 	.globl _P
+                                     29 	.globl _PS
+                                     30 	.globl _PT1
+                                     31 	.globl _PX1
+                                     32 	.globl _PT0
+                                     33 	.globl _PX0
+                                     34 	.globl _RD
+                                     35 	.globl _WR
+                                     36 	.globl _T1
+                                     37 	.globl _T0
+                                     38 	.globl _INT1
+                                     39 	.globl _INT0
+                                     40 	.globl _TXD
+                                     41 	.globl _RXD
+                                     42 	.globl _P3_7
+                                     43 	.globl _P3_6
+                                     44 	.globl _P3_5
+                                     45 	.globl _P3_4
+                                     46 	.globl _P3_3
+                                     47 	.globl _P3_2
+                                     48 	.globl _P3_1
+                                     49 	.globl _P3_0
+                                     50 	.globl _EA
+                                     51 	.globl _ES
+                                     52 	.globl _ET1
+                                     53 	.globl _EX1
+                                     54 	.globl _ET0
+                                     55 	.globl _EX0
+                                     56 	.globl _P2_7
+                                     57 	.globl _P2_6
+                                     58 	.globl _P2_5
+                                     59 	.globl _P2_4
+                                     60 	.globl _P2_3
+                                     61 	.globl _P2_2
+                                     62 	.globl _P2_1
+                                     63 	.globl _P2_0
+                                     64 	.globl _SM0
+                                     65 	.globl _SM1
+                                     66 	.globl _SM2
+                                     67 	.globl _REN
+                                     68 	.globl _TB8
+                                     69 	.globl _RB8
+                                     70 	.globl _TI
+                                     71 	.globl _RI
+                                     72 	.globl _P1_7
+                                     73 	.globl _P1_6
+                                     74 	.globl _P1_5
+                                     75 	.globl _P1_4
+                                     76 	.globl _P1_3
+                                     77 	.globl _P1_2
+                                     78 	.globl _P1_1
+                                     79 	.globl _P1_0
+                                     80 	.globl _TF1
+                                     81 	.globl _TR1
+                                     82 	.globl _TF0
+                                     83 	.globl _TR0
+                                     84 	.globl _IE1
+                                     85 	.globl _IT1
+                                     86 	.globl _IE0
+                                     87 	.globl _IT0
+                                     88 	.globl _P0_7
+                                     89 	.globl _P0_6
+                                     90 	.globl _P0_5
+                                     91 	.globl _P0_4
+                                     92 	.globl _P0_3
+                                     93 	.globl _P0_2
+                                     94 	.globl _P0_1
+                                     95 	.globl _P0_0
+                                     96 	.globl _B
+                                     97 	.globl _ACC
+                                     98 	.globl _PSW
+                                     99 	.globl _IP
+                                    100 	.globl _P3
+                                    101 	.globl _IE
+                                    102 	.globl _P2
+                                    103 	.globl _SBUF
+                                    104 	.globl _SCON
+                                    105 	.globl _P1
+                                    106 	.globl _TH1
+                                    107 	.globl _TH0
+                                    108 	.globl _TL1
+                                    109 	.globl _TL0
+                                    110 	.globl _TMOD
+                                    111 	.globl _TCON
+                                    112 	.globl _PCON
+                                    113 	.globl _DPH
+                                    114 	.globl _DPL
+                                    115 	.globl _SP
+                                    116 	.globl _P0
+                                    117 	.globl _list
+                                    118 	.globl _space
+                                    119 	.globl _curcar
+                                    120 	.globl _thread_num
+                                    121 	.globl _empty
+                                    122 	.globl _full
+                                    123 	.globl _mutex
+                                    124 	.globl _curTime
+                                    125 	.globl _clockd
+                                    126 	.globl _clockc
+                                    127 	.globl _clockb
+                                    128 	.globl _clocka
+                                    129 	.globl _savedSP
+                                    130 	.globl _threadNum
+                                    131 	.globl _threadname
+                                    132 	.globl _masky
+                                    133 ;--------------------------------------------------------
+                                    134 ; special function registers
+                                    135 ;--------------------------------------------------------
+                                    136 	.area RSEG    (ABS,DATA)
+      000000                        137 	.org 0x0000
+                           000080   138 _P0	=	0x0080
+                           000081   139 _SP	=	0x0081
+                           000082   140 _DPL	=	0x0082
+                           000083   141 _DPH	=	0x0083
+                           000087   142 _PCON	=	0x0087
+                           000088   143 _TCON	=	0x0088
+                           000089   144 _TMOD	=	0x0089
+                           00008A   145 _TL0	=	0x008a
+                           00008B   146 _TL1	=	0x008b
+                           00008C   147 _TH0	=	0x008c
+                           00008D   148 _TH1	=	0x008d
+                           000090   149 _P1	=	0x0090
+                           000098   150 _SCON	=	0x0098
+                           000099   151 _SBUF	=	0x0099
+                           0000A0   152 _P2	=	0x00a0
+                           0000A8   153 _IE	=	0x00a8
+                           0000B0   154 _P3	=	0x00b0
+                           0000B8   155 _IP	=	0x00b8
+                           0000D0   156 _PSW	=	0x00d0
+                           0000E0   157 _ACC	=	0x00e0
+                           0000F0   158 _B	=	0x00f0
+                                    159 ;--------------------------------------------------------
+                                    160 ; special function bits
+                                    161 ;--------------------------------------------------------
+                                    162 	.area RSEG    (ABS,DATA)
+      000000                        163 	.org 0x0000
+                           000080   164 _P0_0	=	0x0080
+                           000081   165 _P0_1	=	0x0081
+                           000082   166 _P0_2	=	0x0082
+                           000083   167 _P0_3	=	0x0083
+                           000084   168 _P0_4	=	0x0084
+                           000085   169 _P0_5	=	0x0085
+                           000086   170 _P0_6	=	0x0086
+                           000087   171 _P0_7	=	0x0087
+                           000088   172 _IT0	=	0x0088
+                           000089   173 _IE0	=	0x0089
+                           00008A   174 _IT1	=	0x008a
+                           00008B   175 _IE1	=	0x008b
+                           00008C   176 _TR0	=	0x008c
+                           00008D   177 _TF0	=	0x008d
+                           00008E   178 _TR1	=	0x008e
+                           00008F   179 _TF1	=	0x008f
+                           000090   180 _P1_0	=	0x0090
+                           000091   181 _P1_1	=	0x0091
+                           000092   182 _P1_2	=	0x0092
+                           000093   183 _P1_3	=	0x0093
+                           000094   184 _P1_4	=	0x0094
+                           000095   185 _P1_5	=	0x0095
+                           000096   186 _P1_6	=	0x0096
+                           000097   187 _P1_7	=	0x0097
+                           000098   188 _RI	=	0x0098
+                           000099   189 _TI	=	0x0099
+                           00009A   190 _RB8	=	0x009a
+                           00009B   191 _TB8	=	0x009b
+                           00009C   192 _REN	=	0x009c
+                           00009D   193 _SM2	=	0x009d
+                           00009E   194 _SM1	=	0x009e
+                           00009F   195 _SM0	=	0x009f
+                           0000A0   196 _P2_0	=	0x00a0
+                           0000A1   197 _P2_1	=	0x00a1
+                           0000A2   198 _P2_2	=	0x00a2
+                           0000A3   199 _P2_3	=	0x00a3
+                           0000A4   200 _P2_4	=	0x00a4
+                           0000A5   201 _P2_5	=	0x00a5
+                           0000A6   202 _P2_6	=	0x00a6
+                           0000A7   203 _P2_7	=	0x00a7
+                           0000A8   204 _EX0	=	0x00a8
+                           0000A9   205 _ET0	=	0x00a9
+                           0000AA   206 _EX1	=	0x00aa
+                           0000AB   207 _ET1	=	0x00ab
+                           0000AC   208 _ES	=	0x00ac
+                           0000AF   209 _EA	=	0x00af
+                           0000B0   210 _P3_0	=	0x00b0
+                           0000B1   211 _P3_1	=	0x00b1
+                           0000B2   212 _P3_2	=	0x00b2
+                           0000B3   213 _P3_3	=	0x00b3
+                           0000B4   214 _P3_4	=	0x00b4
+                           0000B5   215 _P3_5	=	0x00b5
+                           0000B6   216 _P3_6	=	0x00b6
+                           0000B7   217 _P3_7	=	0x00b7
+                           0000B0   218 _RXD	=	0x00b0
+                           0000B1   219 _TXD	=	0x00b1
+                           0000B2   220 _INT0	=	0x00b2
+                           0000B3   221 _INT1	=	0x00b3
+                           0000B4   222 _T0	=	0x00b4
+                           0000B5   223 _T1	=	0x00b5
+                           0000B6   224 _WR	=	0x00b6
+                           0000B7   225 _RD	=	0x00b7
+                           0000B8   226 _PX0	=	0x00b8
+                           0000B9   227 _PT0	=	0x00b9
+                           0000BA   228 _PX1	=	0x00ba
+                           0000BB   229 _PT1	=	0x00bb
+                           0000BC   230 _PS	=	0x00bc
+                           0000D0   231 _P	=	0x00d0
+                           0000D1   232 _F1	=	0x00d1
+                           0000D2   233 _OV	=	0x00d2
+                           0000D3   234 _RS0	=	0x00d3
+                           0000D4   235 _RS1	=	0x00d4
+                           0000D5   236 _F0	=	0x00d5
+                           0000D6   237 _AC	=	0x00d6
+                           0000D7   238 _CY	=	0x00d7
+                                    239 ;--------------------------------------------------------
+                                    240 ; overlayable register banks
+                                    241 ;--------------------------------------------------------
+                                    242 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        243 	.ds 8
+                                    244 ;--------------------------------------------------------
+                                    245 ; internal ram data
+                                    246 ;--------------------------------------------------------
+                                    247 	.area DSEG    (DATA)
+                           000020   248 _masky	=	0x0020
+                           000021   249 _threadname	=	0x0021
+                           000022   250 _threadNum	=	0x0022
+                           000023   251 _savedSP	=	0x0023
+                           000027   252 _clocka	=	0x0027
+                           000028   253 _clockb	=	0x0028
+                           000029   254 _clockc	=	0x0029
+                           00002A   255 _clockd	=	0x002a
+                           00002B   256 _curTime	=	0x002b
+                           00002C   257 _mutex	=	0x002c
+                           00002D   258 _full	=	0x002d
+                           00002E   259 _empty	=	0x002e
+                           00002F   260 _thread_num	=	0x002f
+                           000030   261 _curcar	=	0x0030
+                           000031   262 _space	=	0x0031
+                           000033   263 _list	=	0x0033
+                                    264 ;--------------------------------------------------------
+                                    265 ; overlayable items in internal ram 
+                                    266 ;--------------------------------------------------------
+                                    267 ;--------------------------------------------------------
+                                    268 ; Stack segment in internal ram 
+                                    269 ;--------------------------------------------------------
+                                    270 	.area	SSEG
+      000000                        271 __start__stack:
+      000000                        272 	.ds	1
+                                    273 
+                                    274 ;--------------------------------------------------------
+                                    275 ; indirectly addressable internal ram data
+                                    276 ;--------------------------------------------------------
+                                    277 	.area ISEG    (DATA)
+                                    278 ;--------------------------------------------------------
+                                    279 ; absolute internal ram data
+                                    280 ;--------------------------------------------------------
+                                    281 	.area IABS    (ABS,DATA)
+                                    282 	.area IABS    (ABS,DATA)
+                                    283 ;--------------------------------------------------------
+                                    284 ; bit data
+                                    285 ;--------------------------------------------------------
+                                    286 	.area BSEG    (BIT)
+                                    287 ;--------------------------------------------------------
+                                    288 ; paged external ram data
+                                    289 ;--------------------------------------------------------
+                                    290 	.area PSEG    (PAG,XDATA)
+                                    291 ;--------------------------------------------------------
+                                    292 ; external ram data
+                                    293 ;--------------------------------------------------------
+                                    294 	.area XSEG    (XDATA)
+                                    295 ;--------------------------------------------------------
+                                    296 ; absolute external ram data
+                                    297 ;--------------------------------------------------------
+                                    298 	.area XABS    (ABS,XDATA)
+                                    299 ;--------------------------------------------------------
+                                    300 ; external initialized ram data
+                                    301 ;--------------------------------------------------------
+                                    302 	.area XISEG   (XDATA)
+                                    303 	.area HOME    (CODE)
+                                    304 	.area GSINIT0 (CODE)
+                                    305 	.area GSINIT1 (CODE)
+                                    306 	.area GSINIT2 (CODE)
+                                    307 	.area GSINIT3 (CODE)
+                                    308 	.area GSINIT4 (CODE)
+                                    309 	.area GSINIT5 (CODE)
+                                    310 	.area GSINIT  (CODE)
+                                    311 	.area GSFINAL (CODE)
+                                    312 	.area CSEG    (CODE)
+                                    313 ;--------------------------------------------------------
+                                    314 ; interrupt vector 
+                                    315 ;--------------------------------------------------------
+                                    316 	.area HOME    (CODE)
+      000000                        317 __interrupt_vect:
+      000000 02r01rAA         [24]  318 	ljmp	__sdcc_gsinit_startup
+      000003 32               [24]  319 	reti
+      000004                        320 	.ds	7
+      00000B 02r01rA6         [24]  321 	ljmp	_timer0_ISR
+                                    322 ;--------------------------------------------------------
+                                    323 ; global & static initialisations
+                                    324 ;--------------------------------------------------------
+                                    325 	.area HOME    (CODE)
+                                    326 	.area GSINIT  (CODE)
+                                    327 	.area GSFINAL (CODE)
+                                    328 	.area GSINIT  (CODE)
+                                    329 	.globl __sdcc_gsinit_startup
+                                    330 	.globl __sdcc_program_startup
+                                    331 	.globl __start__stack
+                                    332 	.globl __mcs51_genXINIT
+                                    333 	.globl __mcs51_genXRAMCLEAR
+                                    334 	.globl __mcs51_genRAMCLEAR
+                                    335 	.area GSFINAL (CODE)
+      000000 02r00r0E         [24]  336 	ljmp	__sdcc_program_startup
+                                    337 ;--------------------------------------------------------
+                                    338 ; Home
+                                    339 ;--------------------------------------------------------
+                                    340 	.area HOME    (CODE)
+                                    341 	.area HOME    (CODE)
+      00000E                        342 __sdcc_program_startup:
+      00000E 02r01r5E         [24]  343 	ljmp	_main
+                                    344 ;	return from main will return to caller
+                                    345 ;--------------------------------------------------------
+                                    346 ; code
+                                    347 ;--------------------------------------------------------
+                                    348 	.area CSEG    (CODE)
+                                    349 ;------------------------------------------------------------
+                                    350 ;Allocation info for local variables in function 'Car'
+                                    351 ;------------------------------------------------------------
+                                    352 ;	testparking.c:15: void Car(void)
+                                    353 ;	-----------------------------------------
+                                    354 ;	 function Car
+                                    355 ;	-----------------------------------------
+      000000                        356 _Car:
+                           000007   357 	ar7 = 0x07
+                           000006   358 	ar6 = 0x06
+                           000005   359 	ar5 = 0x05
+                           000004   360 	ar4 = 0x04
+                           000003   361 	ar3 = 0x03
+                           000002   362 	ar2 = 0x02
+                           000001   363 	ar1 = 0x01
+                           000000   364 	ar0 = 0x00
+                                    365 ;	testparking.c:17: SemaphoreWait(empty);//If a Car sees a parking lot if empty and get a mutex, it can park itself into it.
+      000000                        366 		0$:
+      000000 85 2E E0         [24]  367 	MOV ACC, _empty 
+      000003 60 FB            [24]  368 	JZ 0$ 
+      000005 20 E7 F8         [24]  369 	JB ACC.7, 0$ 
+      000008 15 2E            [12]  370 	DEC _empty 
+                                    371 ;	testparking.c:18: SemaphoreWait(mutex);
+      00000A                        372 		1$:
+      00000A 85 2C E0         [24]  373 	MOV ACC, _mutex 
+      00000D 60 FB            [24]  374 	JZ 1$ 
+      00000F 20 E7 F8         [24]  375 	JB ACC.7, 1$ 
+      000012 15 2C            [12]  376 	DEC _mutex 
+                                    377 ;	testparking.c:19: if(curcar == 0b00000000){//代表哪台車parking
+      000014 E5 30            [12]  378 	mov	a,_curcar
+      000016 70 21            [24]  379 	jnz	00138$
+                                    380 ;	testparking.c:20: list[threadname] = '1';
+      000018 E5 21            [12]  381 	mov	a,_threadname
+      00001A 24 33            [12]  382 	add	a,#_list
+      00001C F8               [12]  383 	mov	r0,a
+      00001D 76 31            [12]  384 	mov	@r0,#0x31
+                                    385 ;	testparking.c:21: curcar = 0b00000001;
+      00001F 75 30 01         [24]  386 	mov	_curcar,#0x01
+                                    387 ;	testparking.c:22: if(!space[0]){
+      000022 E5 31            [12]  388 	mov	a,_space
+      000024 70 06            [24]  389 	jnz	00104$
+                                    390 ;	testparking.c:23: space[0] = '1';
+      000026 75 31 31         [24]  391 	mov	_space,#0x31
+      000029 02r00rBB         [24]  392 	ljmp	00139$
+      00002C                        393 00104$:
+                                    394 ;	testparking.c:24: }else if(!space[1]){
+      00002C E5 32            [12]  395 	mov	a,(_space + 0x0001)
+      00002E 60 03            [24]  396 	jz	00340$
+      000030 02r00rBB         [24]  397 	ljmp	00139$
+      000033                        398 00340$:
+                                    399 ;	testparking.c:25: space[1] = '1';
+      000033 75 32 31         [24]  400 	mov	(_space + 0x0001),#0x31
+      000036 02r00rBB         [24]  401 	ljmp	00139$
+      000039                        402 00138$:
+                                    403 ;	testparking.c:29: else if(curcar == 0b00000001){
+      000039 74 01            [12]  404 	mov	a,#0x01
+      00003B B5 30 1C         [24]  405 	cjne	a,_curcar,00135$
+                                    406 ;	testparking.c:30: list[threadname] = '2';
+      00003E E5 21            [12]  407 	mov	a,_threadname
+      000040 24 33            [12]  408 	add	a,#_list
+      000042 F8               [12]  409 	mov	r0,a
+      000043 76 32            [12]  410 	mov	@r0,#0x32
+                                    411 ;	testparking.c:31: curcar = 0b00000011;
+      000045 75 30 03         [24]  412 	mov	_curcar,#0x03
+                                    413 ;	testparking.c:32: if(!space[0]){
+      000048 E5 31            [12]  414 	mov	a,_space
+      00004A 70 05            [24]  415 	jnz	00109$
+                                    416 ;	testparking.c:33: space[0] = '2';
+      00004C 75 31 32         [24]  417 	mov	_space,#0x32
+      00004F 80 6A            [24]  418 	sjmp	00139$
+      000051                        419 00109$:
+                                    420 ;	testparking.c:34: }else if(!space[1]){
+      000051 E5 32            [12]  421 	mov	a,(_space + 0x0001)
+      000053 70 66            [24]  422 	jnz	00139$
+                                    423 ;	testparking.c:35: space[1] = '2';
+      000055 75 32 32         [24]  424 	mov	(_space + 0x0001),#0x32
+      000058 80 61            [24]  425 	sjmp	00139$
+      00005A                        426 00135$:
+                                    427 ;	testparking.c:38: else if(curcar == 0b00000011){
+      00005A 74 03            [12]  428 	mov	a,#0x03
+      00005C B5 30 1C         [24]  429 	cjne	a,_curcar,00132$
+                                    430 ;	testparking.c:39: list[threadname] = '3';
+      00005F E5 21            [12]  431 	mov	a,_threadname
+      000061 24 33            [12]  432 	add	a,#_list
+      000063 F8               [12]  433 	mov	r0,a
+      000064 76 33            [12]  434 	mov	@r0,#0x33
+                                    435 ;	testparking.c:40: curcar = 0b00000111;
+      000066 75 30 07         [24]  436 	mov	_curcar,#0x07
+                                    437 ;	testparking.c:41: if(!space[0]){
+      000069 E5 31            [12]  438 	mov	a,_space
+      00006B 70 05            [24]  439 	jnz	00114$
+                                    440 ;	testparking.c:42: space[0] = '3';
+      00006D 75 31 33         [24]  441 	mov	_space,#0x33
+      000070 80 49            [24]  442 	sjmp	00139$
+      000072                        443 00114$:
+                                    444 ;	testparking.c:43: }else if(!space[1]){
+      000072 E5 32            [12]  445 	mov	a,(_space + 0x0001)
+      000074 70 45            [24]  446 	jnz	00139$
+                                    447 ;	testparking.c:44: space[1] = '3';
+      000076 75 32 33         [24]  448 	mov	(_space + 0x0001),#0x33
+      000079 80 40            [24]  449 	sjmp	00139$
+      00007B                        450 00132$:
+                                    451 ;	testparking.c:47: else if(curcar == 0b00000111){
+      00007B 74 07            [12]  452 	mov	a,#0x07
+      00007D B5 30 1C         [24]  453 	cjne	a,_curcar,00129$
+                                    454 ;	testparking.c:48: list[threadname] = '4';
+      000080 E5 21            [12]  455 	mov	a,_threadname
+      000082 24 33            [12]  456 	add	a,#_list
+      000084 F8               [12]  457 	mov	r0,a
+      000085 76 34            [12]  458 	mov	@r0,#0x34
+                                    459 ;	testparking.c:49: curcar = 0b00001111;
+      000087 75 30 0F         [24]  460 	mov	_curcar,#0x0f
+                                    461 ;	testparking.c:50: if(!space[0]){
+      00008A E5 31            [12]  462 	mov	a,_space
+      00008C 70 05            [24]  463 	jnz	00119$
+                                    464 ;	testparking.c:51: space[0] = '4';
+      00008E 75 31 34         [24]  465 	mov	_space,#0x34
+      000091 80 28            [24]  466 	sjmp	00139$
+      000093                        467 00119$:
+                                    468 ;	testparking.c:52: }else if(!space[1]){
+      000093 E5 32            [12]  469 	mov	a,(_space + 0x0001)
+      000095 70 24            [24]  470 	jnz	00139$
+                                    471 ;	testparking.c:53: space[1] = '4';
+      000097 75 32 34         [24]  472 	mov	(_space + 0x0001),#0x34
+      00009A 80 1F            [24]  473 	sjmp	00139$
+      00009C                        474 00129$:
+                                    475 ;	testparking.c:56: else if(curcar == 0b0001111)
+      00009C 74 0F            [12]  476 	mov	a,#0x0f
+      00009E B5 30 1A         [24]  477 	cjne	a,_curcar,00139$
+                                    478 ;	testparking.c:58: list[threadname] = '5';
+      0000A1 E5 21            [12]  479 	mov	a,_threadname
+      0000A3 24 33            [12]  480 	add	a,#_list
+      0000A5 F8               [12]  481 	mov	r0,a
+      0000A6 76 35            [12]  482 	mov	@r0,#0x35
+                                    483 ;	testparking.c:59: curcar = 0b00011111;
+      0000A8 75 30 1F         [24]  484 	mov	_curcar,#0x1f
+                                    485 ;	testparking.c:60: if(!space[0]){
+      0000AB E5 31            [12]  486 	mov	a,_space
+      0000AD 70 05            [24]  487 	jnz	00124$
+                                    488 ;	testparking.c:61: space[0] = '5';
+      0000AF 75 31 35         [24]  489 	mov	_space,#0x35
+      0000B2 80 07            [24]  490 	sjmp	00139$
+      0000B4                        491 00124$:
+                                    492 ;	testparking.c:62: }else if(!space[1]){
+      0000B4 E5 32            [12]  493 	mov	a,(_space + 0x0001)
+      0000B6 70 03            [24]  494 	jnz	00139$
+                                    495 ;	testparking.c:63: space[1] = '5';
+      0000B8 75 32 35         [24]  496 	mov	(_space + 0x0001),#0x35
+      0000BB                        497 00139$:
+                                    498 ;	testparking.c:67: SBUF = list[threadname]; while(!TI){}TI=0;
+      0000BB E5 21            [12]  499 	mov	a,_threadname
+      0000BD 24 33            [12]  500 	add	a,#_list
+      0000BF F9               [12]  501 	mov	r1,a
+      0000C0 87 99            [24]  502 	mov	_SBUF,@r1
+      0000C2                        503 00140$:
+                                    504 ;	assignBit
+      0000C2 10 99 02         [24]  505 	jbc	_TI,00357$
+      0000C5 80 FB            [24]  506 	sjmp	00140$
+      0000C7                        507 00357$:
+                                    508 ;	testparking.c:68: SBUF = '>'; while(!TI){}TI = 0;
+      0000C7 75 99 3E         [24]  509 	mov	_SBUF,#0x3e
+      0000CA                        510 00143$:
+                                    511 ;	assignBit
+      0000CA 10 99 02         [24]  512 	jbc	_TI,00358$
+      0000CD 80 FB            [24]  513 	sjmp	00143$
+      0000CF                        514 00358$:
+                                    515 ;	testparking.c:69: if(space[0] == list[threadname]){
+      0000CF E5 21            [12]  516 	mov	a,_threadname
+      0000D1 24 33            [12]  517 	add	a,#_list
+      0000D3 F9               [12]  518 	mov	r1,a
+      0000D4 E7               [12]  519 	mov	a,@r1
+      0000D5 FF               [12]  520 	mov	r7,a
+      0000D6 B5 31 08         [24]  521 	cjne	a,_space,00155$
+                                    522 ;	testparking.c:70: SBUF = '0';
+      0000D9 75 99 30         [24]  523 	mov	_SBUF,#0x30
+                                    524 ;	testparking.c:71: while(!TI){}TI = 0;
+      0000DC                        525 00146$:
+                                    526 ;	assignBit
+      0000DC 10 99 14         [24]  527 	jbc	_TI,00156$
+      0000DF 80 FB            [24]  528 	sjmp	00146$
+      0000E1                        529 00155$:
+                                    530 ;	testparking.c:72: }else if(space[1] == list[threadname]){
+      0000E1 E5 21            [12]  531 	mov	a,_threadname
+      0000E3 24 33            [12]  532 	add	a,#_list
+      0000E5 F9               [12]  533 	mov	r1,a
+      0000E6 E7               [12]  534 	mov	a,@r1
+      0000E7 FF               [12]  535 	mov	r7,a
+      0000E8 B5 32 08         [24]  536 	cjne	a,(_space + 0x0001),00156$
+                                    537 ;	testparking.c:73: SBUF = '1';
+      0000EB 75 99 31         [24]  538 	mov	_SBUF,#0x31
+                                    539 ;	testparking.c:74: while(!TI){}TI = 0;
+      0000EE                        540 00149$:
+                                    541 ;	assignBit
+      0000EE 10 99 02         [24]  542 	jbc	_TI,00364$
+      0000F1 80 FB            [24]  543 	sjmp	00149$
+      0000F3                        544 00364$:
+      0000F3                        545 00156$:
+                                    546 ;	testparking.c:77: SemaphoreSignal(mutex);
+      0000F3 05 2C            [12]  547 	INC _mutex 
+                                    548 ;	testparking.c:79: delay(10);//thread離開
+      0000F5 75 82 0A         [24]  549 	mov	dpl,#0x0a
+      0000F8 12r00r00         [24]  550 	lcall	_delay
+                                    551 ;	testparking.c:81: SemaphoreWait(mutex); //拿key開走
+      0000FB                        552 		2$:
+      0000FB 85 2C E0         [24]  553 	MOV ACC, _mutex 
+      0000FE 60 FB            [24]  554 	JZ 2$ 
+      000100 20 E7 F8         [24]  555 	JB ACC.7, 2$ 
+      000103 15 2C            [12]  556 	DEC _mutex 
+                                    557 ;	testparking.c:82: if(list[threadname] == space[0])
+      000105 E5 21            [12]  558 	mov	a,_threadname
+      000107 24 33            [12]  559 	add	a,#_list
+      000109 F9               [12]  560 	mov	r1,a
+      00010A E7               [12]  561 	mov	a,@r1
+      00010B FF               [12]  562 	mov	r7,a
+      00010C B5 31 1F         [24]  563 	cjne	a,_space,00178$
+                                    564 ;	testparking.c:84: space[0] = 0;
+      00010F 75 31 00         [24]  565 	mov	_space,#0x00
+                                    566 ;	testparking.c:85: SBUF = list[threadname];//threadname代表現在是誰在操作 哪台車
+      000112 E5 21            [12]  567 	mov	a,_threadname
+      000114 24 33            [12]  568 	add	a,#_list
+      000116 F9               [12]  569 	mov	r1,a
+      000117 87 99            [24]  570 	mov	_SBUF,@r1
+                                    571 ;	testparking.c:86: while(!TI){}TI = 0;
+      000119                        572 00157$:
+                                    573 ;	assignBit
+      000119 10 99 02         [24]  574 	jbc	_TI,00367$
+      00011C 80 FB            [24]  575 	sjmp	00157$
+      00011E                        576 00367$:
+                                    577 ;	testparking.c:87: SBUF = '~';
+      00011E 75 99 7E         [24]  578 	mov	_SBUF,#0x7e
+                                    579 ;	testparking.c:88: while(!TI){}TI = 0;
+      000121                        580 00160$:
+                                    581 ;	assignBit
+      000121 10 99 02         [24]  582 	jbc	_TI,00368$
+      000124 80 FB            [24]  583 	sjmp	00160$
+      000126                        584 00368$:
+                                    585 ;	testparking.c:89: SBUF = '0';
+      000126 75 99 30         [24]  586 	mov	_SBUF,#0x30
+                                    587 ;	testparking.c:90: while(!TI){}TI = 0;
+      000129                        588 00163$:
+                                    589 ;	assignBit
+      000129 10 99 2B         [24]  590 	jbc	_TI,00179$
+      00012C 80 FB            [24]  591 	sjmp	00163$
+      00012E                        592 00178$:
+                                    593 ;	testparking.c:94: else if(list[threadname] == space[1])
+      00012E E5 21            [12]  594 	mov	a,_threadname
+      000130 24 33            [12]  595 	add	a,#_list
+      000132 F9               [12]  596 	mov	r1,a
+      000133 E7               [12]  597 	mov	a,@r1
+      000134 FF               [12]  598 	mov	r7,a
+      000135 B5 32 1F         [24]  599 	cjne	a,(_space + 0x0001),00179$
+                                    600 ;	testparking.c:96: space[1] = 0;
+      000138 75 32 00         [24]  601 	mov	(_space + 0x0001),#0x00
+                                    602 ;	testparking.c:97: SBUF = list[threadname];
+      00013B E5 21            [12]  603 	mov	a,_threadname
+      00013D 24 33            [12]  604 	add	a,#_list
+      00013F F9               [12]  605 	mov	r1,a
+      000140 87 99            [24]  606 	mov	_SBUF,@r1
+                                    607 ;	testparking.c:98: while(!TI){}TI = 0;
+      000142                        608 00166$:
+                                    609 ;	assignBit
+      000142 10 99 02         [24]  610 	jbc	_TI,00372$
+      000145 80 FB            [24]  611 	sjmp	00166$
+      000147                        612 00372$:
+                                    613 ;	testparking.c:99: SBUF = '~';
+      000147 75 99 7E         [24]  614 	mov	_SBUF,#0x7e
+                                    615 ;	testparking.c:100: while(!TI){}TI = 0;
+      00014A                        616 00169$:
+                                    617 ;	assignBit
+      00014A 10 99 02         [24]  618 	jbc	_TI,00373$
+      00014D 80 FB            [24]  619 	sjmp	00169$
+      00014F                        620 00373$:
+                                    621 ;	testparking.c:101: SBUF = '1';
+      00014F 75 99 31         [24]  622 	mov	_SBUF,#0x31
+                                    623 ;	testparking.c:102: while(!TI){}TI = 0;
+      000152                        624 00172$:
+                                    625 ;	assignBit
+      000152 10 99 02         [24]  626 	jbc	_TI,00374$
+      000155 80 FB            [24]  627 	sjmp	00172$
+      000157                        628 00374$:
+      000157                        629 00179$:
+                                    630 ;	testparking.c:107: SemaphoreSignal(mutex);//車子完成離開
+      000157 05 2C            [12]  631 	INC _mutex 
+                                    632 ;	testparking.c:108: SemaphoreSignal(empty);
+      000159 05 2E            [12]  633 	INC _empty 
+                                    634 ;	testparking.c:110: ThreadExit();
+                                    635 ;	testparking.c:111: }
+      00015B 02r00r00         [24]  636 	ljmp	_ThreadExit
+                                    637 ;------------------------------------------------------------
+                                    638 ;Allocation info for local variables in function 'main'
+                                    639 ;------------------------------------------------------------
+                                    640 ;	testparking.c:114: void main(void)
+                                    641 ;	-----------------------------------------
+                                    642 ;	 function main
+                                    643 ;	-----------------------------------------
+      00015E                        644 _main:
+                                    645 ;	testparking.c:116: TMOD|=0x20;
+      00015E 43 89 20         [24]  646 	orl	_TMOD,#0x20
+                                    647 ;	testparking.c:117: TH1=-6;
+      000161 75 8D FA         [24]  648 	mov	_TH1,#0xfa
+                                    649 ;	testparking.c:118: SCON=0x50;
+      000164 75 98 50         [24]  650 	mov	_SCON,#0x50
+                                    651 ;	testparking.c:119: TR1=1;
+                                    652 ;	assignBit
+      000167 D2 8E            [12]  653 	setb	_TR1
+                                    654 ;	testparking.c:120: curcar=0;
+      000169 75 30 00         [24]  655 	mov	_curcar,#0x00
+                                    656 ;	testparking.c:121: space[0]=0;
+      00016C 75 31 00         [24]  657 	mov	_space,#0x00
+                                    658 ;	testparking.c:122: space[1]=0;
+      00016F 75 32 00         [24]  659 	mov	(_space + 0x0001),#0x00
+                                    660 ;	testparking.c:123: list[0]=0;
+      000172 75 33 00         [24]  661 	mov	_list,#0x00
+                                    662 ;	testparking.c:124: list[1]=0;
+      000175 75 34 00         [24]  663 	mov	(_list + 0x0001),#0x00
+                                    664 ;	testparking.c:125: list[2]=0;
+      000178 75 35 00         [24]  665 	mov	(_list + 0x0002),#0x00
+                                    666 ;	testparking.c:126: list[3]=0;
+      00017B 75 36 00         [24]  667 	mov	(_list + 0x0003),#0x00
+                                    668 ;	testparking.c:127: ThreadCreate(Car);
+      00017E 90r00r00         [24]  669 	mov	dptr,#_Car
+      000181 12r00r00         [24]  670 	lcall	_ThreadCreate
+                                    671 ;	testparking.c:128: ThreadCreate(Car);
+      000184 90r00r00         [24]  672 	mov	dptr,#_Car
+      000187 12r00r00         [24]  673 	lcall	_ThreadCreate
+                                    674 ;	testparking.c:129: ThreadCreate(Car);
+      00018A 90r00r00         [24]  675 	mov	dptr,#_Car
+      00018D 12r00r00         [24]  676 	lcall	_ThreadCreate
+                                    677 ;	testparking.c:130: ThreadCreate(Car);
+      000190 90r00r00         [24]  678 	mov	dptr,#_Car
+      000193 12r00r00         [24]  679 	lcall	_ThreadCreate
+                                    680 ;	testparking.c:131: ThreadCreate(Car);
+      000196 90r00r00         [24]  681 	mov	dptr,#_Car
+      000199 12r00r00         [24]  682 	lcall	_ThreadCreate
+                                    683 ;	testparking.c:133: SemaphoreCreate(mutex, 1);
+      00019C 75 2C 01         [24]  684 	mov	_mutex,#0x01
+                                    685 ;	testparking.c:134: SemaphoreCreate(full, 0);
+      00019F 75 2D 00         [24]  686 	mov	_full,#0x00
+                                    687 ;	testparking.c:135: SemaphoreCreate(empty, 2);
+      0001A2 75 2E 02         [24]  688 	mov	_empty,#0x02
+                                    689 ;	testparking.c:137: }
+      0001A5 22               [24]  690 	ret
+                                    691 ;------------------------------------------------------------
+                                    692 ;Allocation info for local variables in function 'timer0_ISR'
+                                    693 ;------------------------------------------------------------
+                                    694 ;	testparking.c:139: void timer0_ISR(void) __interrupt(1) {
+                                    695 ;	-----------------------------------------
+                                    696 ;	 function timer0_ISR
+                                    697 ;	-----------------------------------------
+      0001A6                        698 _timer0_ISR:
+                                    699 ;	testparking.c:142: __endasm;
+      0001A6 02r00r00         [24]  700 	ljmp	_myTimer0Handler
+                                    701 ;	testparking.c:143: }
+      0001A9 32               [24]  702 	reti
+                                    703 ;	eliminated unneeded mov psw,# (no regs used in bank)
+                                    704 ;	eliminated unneeded push/pop not_psw
+                                    705 ;	eliminated unneeded push/pop dpl
+                                    706 ;	eliminated unneeded push/pop dph
+                                    707 ;	eliminated unneeded push/pop b
+                                    708 ;	eliminated unneeded push/pop acc
+                                    709 ;------------------------------------------------------------
+                                    710 ;Allocation info for local variables in function '_sdcc_gsinit_startup'
+                                    711 ;------------------------------------------------------------
+                                    712 ;	testparking.c:146: void _sdcc_gsinit_startup(void){
+                                    713 ;	-----------------------------------------
+                                    714 ;	 function _sdcc_gsinit_startup
+                                    715 ;	-----------------------------------------
+      0001AA                        716 __sdcc_gsinit_startup:
+                                    717 ;	testparking.c:149: __endasm;
+      0001AA 02r00r00         [24]  718 	ljmp	_Bootstrap
+                                    719 ;	testparking.c:150: }
+      0001AD 22               [24]  720 	ret
+                                    721 ;------------------------------------------------------------
+                                    722 ;Allocation info for local variables in function '_mcs51_genRAMCLEAR'
+                                    723 ;------------------------------------------------------------
+                                    724 ;	testparking.c:151: void _mcs51_genRAMCLEAR(void) {}
+                                    725 ;	-----------------------------------------
+                                    726 ;	 function _mcs51_genRAMCLEAR
+                                    727 ;	-----------------------------------------
+      0001AE                        728 __mcs51_genRAMCLEAR:
+      0001AE 22               [24]  729 	ret
+                                    730 ;------------------------------------------------------------
+                                    731 ;Allocation info for local variables in function '_mcs51_genXINIT'
+                                    732 ;------------------------------------------------------------
+                                    733 ;	testparking.c:152: void _mcs51_genXINIT(void) {}
+                                    734 ;	-----------------------------------------
+                                    735 ;	 function _mcs51_genXINIT
+                                    736 ;	-----------------------------------------
+      0001AF                        737 __mcs51_genXINIT:
+      0001AF 22               [24]  738 	ret
+                                    739 ;------------------------------------------------------------
+                                    740 ;Allocation info for local variables in function '_mcs51_genXRAMCLEAR'
+                                    741 ;------------------------------------------------------------
+                                    742 ;	testparking.c:153: void _mcs51_genXRAMCLEAR(void) {}
+                                    743 ;	-----------------------------------------
+                                    744 ;	 function _mcs51_genXRAMCLEAR
+                                    745 ;	-----------------------------------------
+      0001B0                        746 __mcs51_genXRAMCLEAR:
+      0001B0 22               [24]  747 	ret
+                                    748 	.area CSEG    (CODE)
+                                    749 	.area CONST   (CODE)
+                                    750 	.area XINIT   (CODE)
+                                    751 	.area CABS    (ABS,CODE)
