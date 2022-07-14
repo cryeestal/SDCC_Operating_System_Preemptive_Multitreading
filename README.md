@@ -15,7 +15,8 @@ The total text mean:
 3~0) third out space 0
 5~1) fifth out space 1
 ```
-* ![Variable Declaration](/img/o1.png)
+<div align=center><img src="/img/o1.png" alt="Cover" width="55%"/></div>
+
 ## 2.explanation for delay(n), now()
 ```
 I think ‘ms’ is a favorable option of time unit 
@@ -28,6 +29,7 @@ which indicates that four threads will park in and get out then yield if their c
 I use four value to spawn cycles for each thread because they run them independently.
 The now() function display the current time.
 ```
+
 ## 3.explanation for Thread Termination and Creation
 * For guard thread creation and termination, I use a semaphore
 ```
@@ -41,7 +43,8 @@ Thread exit terminate the thread and erase it on mask before it turn to
 serve next thread which is available.It will enter an infinite loop when
 there is no other thread to run until next thread is created.
 ```
-* ![Variable Declaration](/img/o2.png)
+<div align=center><img src="/img/o2.png" alt="Cover" width="55%"/></div>
+
 ## 4.explanation for Parking Lot Example
 ```
 First, 
@@ -56,6 +59,6 @@ list the corresponding car id for ‘1’,and check if space[0] or space[1]
 are ‘0’(empty).If it is empty, park in and mark the space ‘1’(full).
 Put list[carid] in to UART buffer to print out result.
 ```
-* ![Variable Declaration](/img/o3.png)
+<div align=center><img src="/img/o3.png" alt="Cover" width="45%"/></div>
 
 
